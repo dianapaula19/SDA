@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1572534044 source:c:\users\diana\documents\sda\teme\tema_3\tema_3_2\main.cpp
+	<iostream>
+	<cstring>
+	<sstream>
+
