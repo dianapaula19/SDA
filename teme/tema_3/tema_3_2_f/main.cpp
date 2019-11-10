@@ -3,26 +3,28 @@
 using namespace std;
 struct node{
 
-    int value, killed = 0;
+    int value, killed;
     node* next;
 
 };
 class LinkedList{
 
 private:
-    node *last;
+    node *head;
 public:
+    int n;
     LinkedList();
     void AddElement(int);
-    void AddElementAtTheStart(int);
     friend ostream& operator << (ostream&, const LinkedList&);
     friend istream& operator >> (istream&, LinkedList&);
     int the_last_one_left_alive(int, int);
 
 };
+
 LinkedList::LinkedList(){
 
-    last = NULL;
+    head = NULL;
+    n = 0;
 
 }
 istream& operator >> (istream& in, LinkedList& l){
@@ -30,7 +32,8 @@ istream& operator >> (istream& in, LinkedList& l){
     cout << "New List" << endl;
     int n;
     cin >> n;
-    for(int i = 1; i <= n; i++){
+    l.n = n;
+    for(int i = n; i >= 1; i--){
         l.AddElement(i);
     }
 
@@ -39,12 +42,11 @@ istream& operator >> (istream& in, LinkedList& l){
 }
 ostream& operator << (ostream& out, const LinkedList& l){
 
-    node* p = l.last->next;
-    while(p != l.last){
+    node* p = l.head;
+    while(p != NULL){
         cout << p->value << " ";
         p = p->next;
     }
-    cout << l.last->value << " ";
     cout << endl;
 
     return out;
@@ -54,35 +56,62 @@ void LinkedList::AddElement(int new_value){
 
     node* q = new node;
     q->value = new_value;
-    q->next = q;
-    if(last == NULL){
-        last = q;
+    q->killed = 0;
+    q->next = NULL;
+    if(head == NULL){
+        head = q;
+        q = NULL;
     }else{
-        q->next = last->next;
-        last->next = q;
-        last = q;
+        q->next = head;
+        head = q;
     }
 
 }
+
 int LinkedList::the_last_one_left_alive(int k, int n){
 
-    int i = 1;
-    node* p;
-    node* c = last;
-    while(n > 1){
-        if(i % k == 0){
-            c->killed = 1;
+    int i = 0;
+    while(true){
+        node* p = head;
+        while(p){
+            if(p->killed == 0){
+            i++;
+            }
+            if(i % k == 0){
+                p->killed = 1;
+            }
+            p = p->next;
         }
+        node* c = head;
+        int kills = n;
+        while(c){
+            if(c->killed == 1){
+                kills--;
+            }
+            c = c->next;
+        }
+        if(kills == 1){
+            break;
+        }
+
     }
-    return p->value;
+    node* p = head;
+    while(p){
+        if(p->killed == 0){
+            return p->value;
+        }
+        p = p->next;
+    }
+    return 0;
 
 }
 int main()
 {
     LinkedList l;
     cin >> l;
-    cout << l;
-    cout << l.the_last_one_left_alive(2, 10);
+    int k;
+    cin >> k;
+    cout << l.the_last_one_left_alive(k, l.n);
     return 0;
 }
 

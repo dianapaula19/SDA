@@ -54,7 +54,7 @@ int Queue::peek(){
 }
 bool Queue::empty(){
 
-    if(front == NULL && rear == NULL){
+    if(front == NULL){
         return true;
     }else{
         return false;
@@ -103,14 +103,22 @@ void menu(Queue& q){
         break;
         case 2:{
             cout << "pop" << endl;
+            if(q.empty() == 0){
             cout << q.pop() << endl;
+            }else{
+            cout << "nu exista elemente in lista" << endl;
+            }
             cout << "Introduceti o optiune noua:" << endl;
             cin >> x;
         }
         break;
         case 3:{
             cout << "peek" << endl;
+            if(q.empty() == 0){
             cout << q.peek() << endl;
+            }else{
+            cout << "nu exista elemente in coada" << endl;
+            }
             cout << "Introduceti o optiune noua:" << endl;
             cin >> x;
         }
