@@ -9,31 +9,50 @@ struct node{
 };
 class LinkedList{
 
-private:
-    node *head, *tail;
 public:
+    node *head, *tail;
+    int number_of_elements;
     LinkedList();
-    ~LinkedList();
     void AddElement(int);
+    static node* merge_lists(node*, node*);
     friend ostream& operator << (ostream&, const LinkedList&);
     friend istream& operator >> (istream&, LinkedList&);
-    static void new_list (LinkedList&, LinkedList&, LinkedList&);
 
 };
+node* LinkedList::merge_lists(node* a, node* b){
+
+    if(a == NULL){
+        return b;
+    }
+    if(b == NULL){
+        return a;
+    }
+    node* head;
+    if(a->value < b->value){
+        head = a;
+    }else{
+
+        head = b;
+        b = a;
+        a = head;
+    }
+    while(a->next != NULL){
+        if(a->next->value > b->value){
+            node* temp = a->next;
+            a->next = b;
+            b = temp;
+        }
+        a = a->next;
+    }
+    a->next = b;
+    return head;
+
+}
 LinkedList::LinkedList(){
 
     head = NULL;
     tail = NULL;
-
-}
-LinkedList::~LinkedList(){
-
-    node* p = head;
-    while(p){
-        head = head->next;
-        delete p;
-        p = head;
-    }
+    number_of_elements = 0;
 
 }
 istream& operator >> (istream& in, LinkedList& l){
@@ -63,39 +82,6 @@ ostream& operator << (ostream& out, const LinkedList& l){
     return out;
 
 }
-void LinkedList::new_list(LinkedList& a, LinkedList& b, LinkedList& c){
-
-    node* p = a.head;
-    node* q = b.head;
-    while(p != NULL && q != NULL){
-        if(p->value < q->value){
-            c.tail->next = p;
-            c.tail = p;
-            p = p->next;
-        }else if(p->value > q->value){
-            c.tail->next = q;
-            c.tail = q;
-            q = q->next;
-        }else{
-            c.tail->next = p;
-            c.tail = p;
-            p = p->next;
-            q = q->next;
-        }
-    }
-    while(p){
-        c.tail->next = p;
-        c.tail = p;
-        p = p->next;
-    }
-    while(q){
-        c.tail->next = q;
-        c.tail = q;
-        q = q->next;
-    }
-
-
-}
 void LinkedList::AddElement(int new_value){
 
     node* q =  new node;
@@ -109,14 +95,22 @@ void LinkedList::AddElement(int new_value){
         tail->next = q;
         tail = q;
     }
+    number_of_elements++;
 
 }
 int main()
 {
-    LinkedList a, b, c;
+    LinkedList a, b;
+    cout << "List 1." << endl;
     cin >> a;
+    cout << a;
+    cout << "List 2." << endl;
     cin >> b;
-    LinkedList::new_list(a, b, c);
-    cout << c;
+    cout << b;
+    node* new_list = LinkedList::merge_lists(a.head, b.head);
+    while(new_list != NULL){
+        cout << new_list->value << " ";
+        new_list = new_list->next;
+    }
     return 0;
 }

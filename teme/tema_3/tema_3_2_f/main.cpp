@@ -3,7 +3,7 @@
 using namespace std;
 struct node{
 
-    int value;
+    int value, killed = 0;
     node* next;
 
 };
@@ -39,11 +39,12 @@ istream& operator >> (istream& in, LinkedList& l){
 }
 ostream& operator << (ostream& out, const LinkedList& l){
 
-    node* p = l.last;
-    while(p){
+    node* p = l.last->next;
+    while(p != l.last){
         cout << p->value << " ";
         p = p->next;
     }
+    cout << l.last->value << " ";
     cout << endl;
 
     return out;
@@ -69,14 +70,9 @@ int LinkedList::the_last_one_left_alive(int k, int n){
     node* p;
     node* c = last;
     while(n > 1){
-        if(i % 7 == 0){
-           p->next = c->next;
-           delete c;
+        if(i % k == 0){
+            c->killed = 1;
         }
-        i++;
-        n--;
-        p = c;
-        c = c->next;
     }
     return p->value;
 

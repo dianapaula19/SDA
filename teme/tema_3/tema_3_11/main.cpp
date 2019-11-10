@@ -9,7 +9,7 @@ struct node{
 };
 class LinkedList{
 
-private:
+public:
     node *head, *tail;
 public:
     LinkedList();
@@ -17,7 +17,7 @@ public:
     void AddElement(int);
     friend ostream& operator << (ostream&, const LinkedList&);
     friend istream& operator >> (istream&, LinkedList&);
-    static void new_lists(LinkedList&, LinkedList&, LinkedList&);
+    static void new_lists(const LinkedList&);
 
 };
 LinkedList::LinkedList(){
@@ -63,19 +63,66 @@ ostream& operator << (ostream& out, const LinkedList& l){
     return out;
 
 }
-void LinkedList::new_lists(LinkedList& a, LinkedList& b, LinkedList& c){
+void LinkedList::new_lists(const LinkedList& c){
 
-    node* p = c.head;
-    int i = 0;
-    while(p != NULL){
-        if(i % 2 == 0){
-            b.AddElement(p->value);
-        }else{
-            a.AddElement(p->value);
-        }
-        p = p->next;
-        i++;
+    node *a, *b, *temp_a, *temp_b;
+    if(c.head == NULL){
+        cout << "no elements in the list" << endl;
+        return;
     }
+    if(c.head->next == NULL){
+        a = c.head;
+        cout << "1st List" << endl;
+        cout << a->value << endl;
+        cout << "2st List" << endl;
+        cout << "no elements in this list";
+        return;
+    }
+    if(c.head->next->next == NULL){
+        a = c.head;
+        b = c.head->next;
+        temp_a = a;
+        temp_b = b;
+        temp_a = temp_a->next->next;
+        a->next = temp_a;
+        cout << "1st List" << endl;
+        while(a){
+        cout << a->value << " ";
+        a = a->next;
+        }
+        cout << endl;
+        cout << "2nd List" << endl;
+        cout << temp_b->value;
+        return;
+    }
+    node* p = c.head;
+    a = c.head;
+    b = c.head->next;
+    temp_a = a->next->next;
+    temp_b = b->next->next;
+    a->next = temp_a;
+    b->next = temp_b;
+    while(temp_a->next && temp_b->next){
+        node* temp_a_next = temp_a->next->next;
+        node* temp_b_next = temp_b->next->next;
+        temp_a->next = temp_a_next;
+        temp_b->next = temp_b_next;
+        temp_a = temp_a->next;
+        temp_b = temp_b->next;
+    }
+    temp_a->next = NULL;
+    cout << "1st List" << endl;
+    while(a){
+        cout << a->value << " ";
+        a = a->next;
+    }
+    cout << endl;
+    cout << "2nd List" << endl;
+    while(b){
+        cout << b->value << " ";
+        b = b->next;
+    }
+
 }
 void LinkedList::AddElement(int new_value){
 
@@ -94,10 +141,9 @@ void LinkedList::AddElement(int new_value){
 }
 int main()
 {
-    LinkedList a, b, c;
+    LinkedList c;
     cin >> c;
-    LinkedList::new_lists(a, b, c);
-    cout << a;
-    cout << b;
+    cout << c;
+    LinkedList::new_lists(c);
     return 0;
 }
