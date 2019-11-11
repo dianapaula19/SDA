@@ -89,9 +89,9 @@ void Stack::afisare(){
 }
 void sir_de_caractere(Stack& s){
 
-    int x;
+    string x;
     cin >> x;
-    while(x != 1){
+    while(x == "ok"){
         cout << "sir de caractere" << endl;
         string sir;
         cin >> sir;

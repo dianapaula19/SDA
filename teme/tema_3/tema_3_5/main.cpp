@@ -84,96 +84,33 @@ void Stack::afisare(){
 }
 void menu(Stack& s){
 
-    cout << "Introduceti o optiune noua:" << endl;
-    int x;
-    cin >> x;
-    while(x){
-        switch(x){
-
-        case 1:{
-            cout << "push" << endl;
-            int a;
-            cin >> a;
-            s.push(a);
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 2:{
-            cout << "pop" << endl;
-            cout << s.pop() << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 3:{
-            cout << "peek" << endl;
-            cout << s.peek() << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 4:{
-            cout << "empty" << endl;
-            cout << s.empty() << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 5:{
-            cout << "search" << endl;
-            cout << "Elementul cautat" << endl;
-            int a;
-            cin >> a;
-            cout << s.search(a) << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 6:{
-            cout << "afisare" << endl;
-            s.afisare();
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 7:{
-
-            cout << "expresie postfix" << endl;
-            string element;
-            cin >> element;
-            while(element != "end"){
-                stringstream ss(element);
-                int x;
-                char c;
-                if(element[0] >= '0' && element[0] <= '9'){
-                    ss >> x;
-                    s.push(x);
-                }else{
-                    ss >> c;
-                    int val1 = s.pop();
-                    int val2 = s.pop();
-                    if(c == '*'){
-                        s.push(val2 * val1);
-                    }else if(c == '-'){
-                        s.push(val2 - val1);
-                    }else if(c == '+'){
-                        s.push(val2 + val1);
-                    }else if(c == '/'){
-                        s.push(val2 / val1);
-                    }
-                }
-
-                cin >> element;
+    cout << "expresie postfix" << endl;
+    string element;
+    cin >> element;
+    while(element != "end"){
+        stringstream ss(element);
+        int x;
+        char c;
+        if(element[0] >= '0' && element[0] <= '9'){
+            ss >> x;
+            s.push(x);
+        }else{
+            ss >> c;
+            int val1 = s.pop();
+            int val2 = s.pop();
+            if(c == '*'){
+                s.push(val2 * val1);
+            }else if(c == '-'){
+                s.push(val2 - val1);
+            }else if(c == '+'){
+                s.push(val2 + val1);
+            }else if(c == '/'){
+                s.push(val2 / val1);
             }
-            cout << s.peek() << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
         }
-        break;
+        cin >> element;
     }
-    }
-
+    cout << s.peek() << endl;
 }
 int main()
 {

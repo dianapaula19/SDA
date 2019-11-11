@@ -99,14 +99,22 @@ void menu(Stack& s){
         break;
         case 2:{
             cout << "pop" << endl;
+            if(s.empty() == 0){
             cout << s.pop() << endl;
+            }else{
+            cout << "Nu exista elemente in stiva" << endl;
+            }
             cout << "Introduceti o optiune noua:" << endl;
             cin >> x;
         }
         break;
         case 3:{
             cout << "peek" << endl;
+            if(s.empty() == 0){
             cout << s.peek() << endl;
+            }else{
+            cout << "Nu exista elemente in stiva" << endl;
+            }
             cout << "Introduceti o optiune noua:" << endl;
             cin >> x;
         }

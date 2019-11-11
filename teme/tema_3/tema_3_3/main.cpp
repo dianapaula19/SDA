@@ -47,7 +47,11 @@ void Stack::pop(){
 }
 char Stack::peek(){
 
-    return top->data;
+    if(top != NULL){
+        return top->data;
+    }else{
+        return '\0';
+    }
 
 }
 bool Stack::empty(){
@@ -82,96 +86,49 @@ void Stack::afisare(){
     }
 
 }
-void menu(Stack& s){
+void expresie_corect_parantezata(Stack& s){
 
-    cout << "Introduceti o optiune noua:" << endl;
-    int x;
+    string x;
     cin >> x;
-    while(x){
-        switch(x){
-
-        case 1:{
-            cout << "push" << endl;
-            int a;
-            cin >> a;
-            s.push(a);
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 2:{
-            cout << "pop" << endl;
-            s.pop();
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 3:{
-            cout << "peek" << endl;
-            cout << s.peek() << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 4:{
-            cout << "empty" << endl;
-            cout << s.empty() << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 5:{
-            cout << "search" << endl;
-            cout << "Elementul cautat" << endl;
-            int a;
-            cin >> a;
-            cout << s.search(a) << endl;
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 6:{
-            cout << "afisare" << endl;
-            s.afisare();
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
-        }
-        break;
-        case 7:{
-
-            cout << "expresie" << endl;
-            string exp;
-            cin >> exp;
-            int i = 0;
-            while(exp[i] != '\0'){
-                if(exp[i] == '('){
+    while(x == "ok"){
+        cout << "expresie" << endl;
+        string exp;
+        cin >> exp;
+        int nope = 0;
+        int i = 0;
+        while(exp[i] != '\0'){
+            if(exp[i] == '('){
+                s.push(exp[i]);
+            }else if(exp[i] == ')'){
+                if(s.peek() != '('){
                     s.push(exp[i]);
-                }else if(exp[i] == ')'){
-                    if(s.peek() != '('){
-                        cout << s.search('(') << endl;
-                        break;
+                    break;
+                }else{
+                    if(s.empty() == 0){
+                    s.pop();
                     }else{
-                        s.pop();
+                    nope = 1;
+                    break;
                     }
                 }
-                i++;
             }
-            if(s.empty() == 1){
-                cout << "corect parantezata" << endl;
-            }else{
-                cout << "nu este corect parantezata" << endl;
-            }
-            cout << "Introduceti o optiune noua:" << endl;
-            cin >> x;
+            ++i;
         }
-        break;
-    }
-    }
+        if(s.empty() == 1 && nope == 0){
+            cout << "corect parantezata" << endl;
+        }else{
+            cout << i << endl;
+            cout << "nu este corect parantezata" << endl;
+        }
+        cin >> x;
+        }
+
+
 
 }
 int main()
 {
     Stack s;
-    menu(s);
+    expresie_corect_parantezata(s);
     return 0;
 }
