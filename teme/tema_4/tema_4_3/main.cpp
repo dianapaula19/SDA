@@ -86,7 +86,7 @@ binaryIndexedTree::searchIndex(node* root_, int index) {
     } else if (index < root_->left_size) {
         return searchIndex(root_->left, index);
     } else if (index > root_->left_size) {
-        return index - root_->left_size - 1;
+        return searchIndex(root_->right, index - root_->left_size - 1);
     }
     return 0;
 
