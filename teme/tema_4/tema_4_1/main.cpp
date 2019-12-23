@@ -128,8 +128,6 @@ void binarySearchTree::SRD(node* root_){
     }
 }
 void binarySearchTree::SDR(node* root_){
-
-
     //post order
     if(root_) {
         binarySearchTree::SDR(root_->left);
