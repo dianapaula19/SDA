@@ -111,7 +111,7 @@ node* binarySearchTree::findMinNode(node* root_) {
 
 }
 void binarySearchTree::RSD(node* root_){
-
+    //pre order
     if(root_) {
     cout << root_->value << " ";
     binarySearchTree::RSD(root_->left);
@@ -120,7 +120,7 @@ void binarySearchTree::RSD(node* root_){
 
 }
 void binarySearchTree::SRD(node* root_){
-
+    //in-order
     if(root_) {
         binarySearchTree::SRD(root_->left);
         cout << root_->value << " ";
@@ -129,6 +129,8 @@ void binarySearchTree::SRD(node* root_){
 }
 void binarySearchTree::SDR(node* root_){
 
+
+    //post order
     if(root_) {
         binarySearchTree::SDR(root_->left);
         binarySearchTree::SDR(root_->right);

@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1576194624 source:c:\users\diana\documents\year 2. semester 1\sda\teme\tema_5_3\main.cpp
+	<cstdlib>
+	<time.h>
+	<stdlib.h>
+	<iostream>
+
