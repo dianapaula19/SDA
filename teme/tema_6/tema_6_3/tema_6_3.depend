@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1577152545 source:c:\users\diana\documents\year 2. semester 1\sda\teme\tema_6\tema_6_3\main.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<deque>
+	<bits/stdc++.h>
+

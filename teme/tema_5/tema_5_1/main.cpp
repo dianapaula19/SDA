@@ -1,233 +1,144 @@
-#include <iostream>
-
-using std::cout;
-using std::cin;
-using std::endl;
-using std::istream;
-
-class Node {
-
-public:
-    int value;
-    int height;
-    Node* left;
-    Node* right;
-    Node();
-    Node(int);
-    int getBalance();
-
+#include<iostream>
+#include<cstdio>
+#include<sstream>
+#include<algorithm>
+#define pow2(n) (1 << (n))
+using namespace std;
+struct avl {
+   int d;
+   struct avl *l;
+   struct avl *r;
+}*r;
+class avl_tree {
+   public:
+      int height(avl*);
+      int difference(avl*);
+      avl* rr_rotat(avl*);
+      avl* ll_rotat(avl*);
+      avl* lr_rotat(avl*);
+      avl* rl_rotat(avl*);
+      avl* balance(avl*);
+      avl* insert(avl*, int);
+      void inorder(avl*);
+      void preorder(avl*);
+      avl_tree() {
+         r = NULL;
+      }
 };
-Node::Node() {
-
-    value = 0;
-    height = 0;
-    left = nullptr;
-    right = nullptr;
-
+int avl_tree::height(avl* t) {
+   int h = 0;
+   if (t != NULL) {
+      int l_height = height(t->l);
+      int r_height = height(t->r);
+      int max_height = max(l_height, r_height);
+      h = max_height + 1;
+   }
+   return h;
 }
-Node::Node(int new_value) {
-
-    value = new_value;
-    height = 1;
-    left = nullptr;
-    right = nullptr;
-
+int avl_tree::difference(avl* t) {
+   int l_height = height(t->l);
+   int r_height = height(t->r);
+   int b_factor = l_height - r_height;
+   return b_factor;
 }
-int Node::getBalance() {
-
-    return (this->left->height - this->right->height);
-
+avl *avl_tree::rr_rotat(avl* parent) {
+   avl *t;
+   t = parent->r;
+   parent->r = t->l;
+   t->l = parent;
+   return t;
 }
-class AVLTree {
-
-public:
-    Node* root;
-    AVLTree();
-    static Node* rightRotate(Node*);
-    static Node* leftRotate(Node*);
-    static Node* add_key(Node*, int);
-    static void print_pre_order(Node*);
-    static void print_in_order(Node*);
-    friend istream& operator >> (istream&, AVLTree&);
-};
-AVLTree::AVLTree() {
-
-    root = nullptr;
-
+avl *avl_tree::ll_rotat(avl* parent) {
+   avl *t;
+   t = parent->l;
+   parent->l = t->r;
+   t->r = parent;
+   return t;
 }
-Node* AVLTree::rightRotate(Node* y) {
-
-    Node* x = y->left;
-    Node* T2 = x->right;
-
-    x->right = y;
-    y->left = T2;
-
-    if (y->left->height > y->right->height) {
-        y->height = y->left->height + 1;
-    } else {
-        y->height = y->right->height + 1;
-    }
-    if (x->left->height > x->right->height) {
-        x->height = x->left->height + 1;
-    } else {
-        x->height = x->right->height + 1;
-    }
-
-    return x;
+avl *avl_tree::lr_rotat(avl* parent) {
+   avl *t;
+   t = parent->l;
+   parent->l = rr_rotat(t);
+   return ll_rotat(parent);
 }
-Node* AVLTree::leftRotate(Node* x) {
-
-    Node* y = x->right;
-    Node* T2 = y->left;
-
-    y->left = x;
-    x->right = T2;
-
-    if (y->left->height > y->right->height) {
-        y->height = y->left->height + 1;
-    } else {
-        y->height = y->right->height + 1;
-    }
-    if (x->left->height > x->right->height) {
-        x->height = x->left->height + 1;
-    } else {
-        x->height = x->right->height + 1;
-    }
-
-    return y;
+avl *avl_tree::rl_rotat(avl* parent) {
+   avl *t;
+   t = parent->r;
+   parent->r = ll_rotat(t);
+   return rr_rotat(parent);
 }
-Node* AVLTree::add_key(Node* root, int new_value) {
-
-    // creates the very first key of the AVL Tree
-    if (root == nullptr) {
-        return new Node(new_value);
-    }
-
-    if (root->value > new_value) {
-        root->left = AVLTree::add_key(root->left, new_value);
-    } else if (root->value < new_value) {
-        root->right = AVLTree::add_key(root->right, new_value);
-    } else {
-        return root;
-    }
-    if (root->left != nullptr && root->right == nullptr) {
-        root->height = root->left->height + 1;
-    } else if (root->left == nullptr && root->right != nullptr) {
-        root->height = root->right->height + 1;
-    } else if (root->left != nullptr && root->right != nullptr) {
-        if (root->left->height > root->right->height) {
-            root->height = root->left->height + 1;
-        } else {
-            root->height = root->right->height + 1;
-        }
-    }
-        /*
-    int balance = root->getBalance();
-
-    if (balance > 1 && new_value < root->left->value) {
-        return AVLTree::leftRotate(root);
-    }
-    if (balance < -1 && new_value > root->right->value) {
-        return AVLTree::leftRotate(root);
-    }
-    if (balance > 1 && new_value > root->left->value) {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
-    }
-    if (balance < -1 && new_value < root->right->value) {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
-    }
-    */
-    return root;
+avl *avl_tree::balance(avl* t) {
+   int bal_factor = difference(t);
+   if (bal_factor > 1) {
+      if (difference(t->l) > 0)
+         t = ll_rotat(t);
+      else
+         t = lr_rotat(t);
+   } else if (bal_factor < -1) {
+      if (difference(t->r) > 0)
+         t = rl_rotat(t);
+      else
+         t = rr_rotat(t);
+   }
+   return t;
 }
-void AVLTree::print_pre_order(Node* root) {
-
-    if (root != nullptr) {
-        cout << root->value << " ";
-        print_pre_order(root->left);
-        print_pre_order(root->right);
-    }
-
+avl *avl_tree::insert(avl* r, int v) {
+   if (r == NULL) {
+      r = new avl;
+      r->d = v;
+      r->l = NULL;
+      r->r = NULL;
+      return r;
+   } else if (v< r->d) {
+      r->l = insert(r->l, v);
+      r = balance(r);
+   } else if (v >= r->d) {
+      r->r = insert(r->r, v);
+      r = balance(r);
+   } return r;
 }
-void AVLTree::print_in_order(Node* root) {
-
-    if (root != nullptr) {
-        print_in_order(root->left);
-        cout << root->value << " ";
-        print_in_order(root->right);
-    }
-
+void avl_tree::inorder(avl* t) {
+   if (t == NULL)
+      return;
+      inorder(t->l);
+      cout << t->d << " ";
+      inorder(t->r);
 }
-istream& operator >> (istream& in, AVLTree& avl_tree) {
-
-    cout << "Adaugati numarul de elemente din arbore:\n";
-    int n;
-    in >> n;
-    for(int i = 0; i < n; ++i) {
-        cout << "element nou = ";
-        int new_value;
-        in >> new_value;
-        avl_tree.root = AVLTree::add_key(avl_tree.root, new_value);
-
-    }
-    return in;
-
+void avl_tree::preorder(avl* t) {
+   if (t == NULL)
+      return;
+      cout << t->d << " ";
+      preorder(t->l);
+      preorder(t->r);
 }
 
-void menu(AVLTree& avl_tree) {
+int main() {
 
-    cout << "1-adauga o cheie noua\n";
-    cout << "2-RSD\n";
-    cout << "3-SDR\n";
-    cout << "Optiunea dorita: ";
-    int op;
-    cin >> op;
-    while(op) {
-        switch(op) {
-            case 1: {
-                cout << "Adaugati un element nou: ";
-                int new_value;
-                cin >> new_value;
-                avl_tree.root = AVLTree::add_key(avl_tree.root, new_value);
-                cout << "\n";
-                cout << "1-adauga o cheie noua\n";
-                cout << "2-RSD\n";
-                cout << "3-SDR\n";
-                cout << "Optiunea dorita: ";
-                cin >> op;
-            }
-            break;
-            case 2: {
-                cout << "RSD\n";
-                AVLTree::print_pre_order(avl_tree.root);
-                cout << "\n";
-                cout << "1-adauga o cheie noua\n";
-                cout << "2-RSD\n";
-                cout << "3-SDR\n";
-                cout << "Optiunea dorita: ";
-                cin >> op;
-            }
-            break;
-            case 3: {
-                cout << "SDR\n";
-                AVLTree::print_in_order(avl_tree.root);
-                cout << "\n";
-                cout << "1-adauga o cheie noua\n";
-                cout << "2-RSD\n";
-                cout << "3-SDR\n";
-                cout << "Optiunea dorita: ";
-                cin >> op;
-            }
-            break;
-            }
-        }
-}
-int main()
-{
-    AVLTree avl_tree;
-    cin >> avl_tree;
-    menu(avl_tree);
-    return 0;
+   int c, i;
+   avl_tree avl;
+   while (1) {
+      cout << "1.Adauga un element in arbore\n";
+      cout << "2.SDR\n";
+      cout << "3.RSD\n";
+      cout << "Optiune: ";
+      cin >> c;
+      switch (c) {
+         case 1:
+            cout << "element = ";
+            cin >> i;
+            r = avl.insert(r, i);
+         break;
+         case 2:
+            cout << "SRD:" << endl;
+            avl.inorder(r);
+            cout << endl;
+         break;
+         case 3:
+            cout << "RSD:" << endl;
+            avl.preorder(r);
+            cout << endl;
+         break;
+      }
+   }
+   return 0;
 }
